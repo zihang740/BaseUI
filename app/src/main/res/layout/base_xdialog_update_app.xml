@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@mipmap/base_dialog_update_bg"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/updataversion_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_120"
+        android:text="@string/base_update_to"
+        android:textColor="@color/black"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:id="@+id/updataVersionCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="V1.0.1"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_5"
+        android:text="@string/base_content"
+        android:textColor="@color/black"
+        android:textSize="15sp"/>
+
+
+    <com.hzh.frame.widget.xProgressButton.ProgressButton
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_42"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:text="@string/base_go_update"
+        android:textColor="@color/white"
+        app:buttonColor="@color/base_button_up"
+        app:cornerRadius="@dimen/dp_21"
+        app:maxProgress="100"
+        app:progressBackColor="#e0e0e0"
+        app:progressColor="#80cc33"
+        app:progressMargin="2dp"/>
+</LinearLayout>

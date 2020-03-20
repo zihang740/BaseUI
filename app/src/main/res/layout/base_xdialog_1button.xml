@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@drawable/base_view_x1button_dialog_bg"
+              android:gravity="center"
+              android:minHeight="125dp"
+              android:minWidth="250dp"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="6"
+        android:gravity="center_vertical|left"
+        android:text="提示信息"
+        android:textColor="#333333"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/line"
+        style="@style/base_line_vertical1px"/>
+
+    <TextView
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="4"
+        android:background="@drawable/base_dialog_1button_select"
+        android:gravity="center"
+        android:text="@string/base_confirm"
+        android:textColor="#666666"
+        android:textSize="15sp"/>
+
+</LinearLayout>

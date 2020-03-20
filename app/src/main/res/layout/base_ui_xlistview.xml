@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="0dp"
+             android:layout_marginTop="10dp"
+             android:layout_weight="3"
+             android:background="@color/white">
+
+    <com.hzh.frame.widget.xlistview.XListView
+        android:id="@+id/xListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#e4e4e4"
+        android:dividerHeight="0.5dp"
+        android:footerDividersEnabled="false"
+        android:scrollbars="none"/>
+
+    <include
+        android:id="@+id/xlistViewBg"
+        layout="@layout/base_view_list_bg_default"
+        android:visibility="gone"/>
+</FrameLayout>

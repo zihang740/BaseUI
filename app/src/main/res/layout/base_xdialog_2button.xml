@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_view_x2button_dialog_bg"
+    android:gravity="center_vertical"
+    android:minHeight="125dp"
+    android:minWidth="250dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="6"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/base_alert_mssage"
+        android:textColor="#333333"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/line"
+        style="@style/base_line_vertical1px" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/base_dialog_2button_confirm_select"
+            android:gravity="center"
+            android:text="@string/base_confirm"
+            android:textColor="#666666"
+            android:textSize="15sp" />
+
+        <TextView style="@style/base_line_horizontal1px" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/base_dialog_2button_cancel_select"
+            android:gravity="center"
+            android:text="@string/base_cancel"
+            android:textColor="#666666"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+参考连接:http://blog.csdn.net/qq_23179075/article/details/71123452
+据说能解决JCenter下载太慢:http://blog.csdn.net/wuqilianga/article/details/54894367
+
+https://www.bintray.com/
+长相:hzh153200037
+身高:ZI_HANG740
+API Key:a2396ff29ab0d4fcfcab3b1033a6a2b3900d76e4
+
+提交:gradlew clean build bintrayUpload -PbintrayUser=hzh153200037 -PbintrayKey=a2396ff29ab0d4fcfcab3b1033a6a2b3900d76e4 -PdryRun=false
+
+
+
+
+绑定邮箱
+zi_hang740@126.com
+hzh153200037
+

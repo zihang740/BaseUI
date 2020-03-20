@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/base_image_logo_bg" />
+            <corners android:radius="@dimen/base_fillet_circle" />
+        </shape>
+    </item>
+    <item>
+        <bitmap
+            android:alpha="1"
+            android:antialias="true"
+            android:dither="true"
+            android:filter="true"
+            android:gravity="clip_vertical"
+            android:src="@mipmap/base_app_logo"
+            android:tint="@color/base_image_logo_color"
+            android:tintMode="multiply" />
+    </item>
+</layer-list>

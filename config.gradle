@@ -1,0 +1,25 @@
+ext{
+    // false: 组件模式
+    // true ：集成模式
+    isModule = true
+    androidInfo = [
+            compileSdkVersion: 28,
+            buildToolsVersion:"28.0.3",
+            targetSdkVersion : 28,
+            minSdkVersion    : 14,
+            versionCode      : 407,
+            versionName      : "4.0.7"
+    ]
+
+    appId = [
+            "app"  : "com.hzh.frame" 
+    ]
+
+    //相关依赖
+    link = [
+            "appcompatV7":"com.android.support:appcompat-v7:28.+",
+            "supportV4":"com.android.support:support-v4:28.+",
+            "recyclerView":"com.android.support:recyclerview-v7:28.+",
+            "design":"com.android.support:design:28.+"
+    ]
+}

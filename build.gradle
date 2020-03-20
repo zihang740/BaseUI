@@ -1,0 +1,33 @@
+apply from: "config.gradle"
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+        maven { url "https://maven.google.com" }
+        maven { url "https://jitpack.io" }
+    }
+    dependencies {
+        //这里的gradle代表gradle插件版本
+        classpath 'com.android.tools.build:gradle:3.5.0'
+        //ShareSDK
+        classpath "com.mob.sdk:MobSDK:+"
+        //发布到jitpack.io远程maven仓库
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1' // Add this line
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+        maven { url "https://maven.google.com" }
+        maven { url "https://jitpack.io" }
+        //ActiveAndroid 需要的Maven地址,需要在引入BaseUI的项目中也加上
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

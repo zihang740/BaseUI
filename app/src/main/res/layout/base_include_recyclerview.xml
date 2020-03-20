@@ -1,0 +1,28 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="@color/base_bg">
+
+    <com.hzh.frame.widget.xrefresh.XSwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none"/>
+
+    </com.hzh.frame.widget.xrefresh.XSwipeRefreshLayout>
+
+    <include
+        android:id="@+id/recyclerViewBg"
+        layout="@layout/base_view_list_bg_default"
+        android:visibility="gone"/>
+</FrameLayout>

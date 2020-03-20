@@ -1,0 +1,99 @@
+<resources>
+
+    <!--
+         Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels.
+    -->
+    <declare-styleable name="BottomNavigationBar">
+        <attr name="bnbElevation" format="dimension" />
+        <attr name="bnbActiveColor" format="color" />
+        <attr name="bnbInactiveColor" format="color" />
+        <attr name="bnbBackgroundColor" format="color" />
+        <attr name="bnbAnimationDuration" format="integer" />
+        <attr name="bnbMode" format="enum">
+            <enum name="mode_default" value="0" />
+            <enum name="mode_fixed" value="1" />
+            <enum name="mode_shifting" value="2" />
+        </attr>
+        <attr name="bnbBackgroundStyle" format="enum">
+            <enum name="background_style_default" value="0" />
+            <enum name="background_style_static" value="1" />
+            <enum name="background_style_ripple" value="2" />
+        </attr>
+        <attr name="bnbAutoHideEnabled" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="CounterView">
+        <attr name="prefix" format="string" />
+        <attr name="suffix" format="string" />
+        <attr name="timeInterval" format="float" />
+        <attr name="incrementValue" format="float" />
+        <attr name="startValue" format="float" />
+        <attr name="endValue" format="float" />
+        <attr name="formatText" format="boolean" />
+        <attr name="autoStart" format="boolean" />
+        <attr name="type" format="enum">
+            <enum name="integer" value="0" />
+            <enum name="decimal" value="1" />
+            <enum name="both" value="2" />
+        </attr>
+        <attr name="android:text" />
+    </declare-styleable>
+    <declare-styleable name="ProgressWheel">
+        <attr name="matProg_progressIndeterminate" format="boolean" />
+        <attr name="matProg_barColor" format="color" />
+        <attr name="matProg_rimColor" format="color" />
+        <attr name="matProg_rimWidth" format="dimension" />
+        <attr name="matProg_spinSpeed" format="float" />
+        <attr name="matProg_barSpinCycleTime" format="integer" />
+        <attr name="matProg_circleRadius" format="dimension" />
+        <attr name="matProg_fillRadius" format="boolean" />
+        <attr name="matProg_barWidth" format="dimension" />
+        <attr name="matProg_linearProgress" format="boolean" />
+    </declare-styleable>
+    
+     <declare-styleable name="RippleView">
+        <attr name="rippleColor" format="color" />
+        <attr name="alphaFactor" format="float" />
+        <attr name="hover" format="boolean" />
+    </declare-styleable>
+    
+     <declare-styleable name="SuspendLayout">
+        <attr name="showPercent" format="float"/>
+    </declare-styleable>
+     <declare-styleable name="RippleBackground">
+        <attr name="rb_color" format="color" />
+        <attr name="rb_strokeWidth" format="dimension"/>
+        <attr name="rb_radius" format="dimension"/>
+        <attr name="rb_duration" format="integer"/>
+        <attr name="rb_rippleAmount" format="integer"/>
+        <attr name="rb_scale" format="float"/>
+        <attr name="rb_type" format="enum">
+            <enum name="fillRipple" value="0"/>
+            <enum name="strokeRipple" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <!-- ProgressButton -->
+    <attr name="progressColor" format="color" />
+    <attr name="progressBackColor" format="color" />
+    <attr name="progress" format="integer" />
+    <attr name="minProgress" format="integer" />
+    <attr name="maxProgress" format="integer" />
+
+    <declare-styleable name="ProgressButton">
+        <attr name="progressColor" />
+        <attr name="progressBackColor" />
+        <attr name="buttonColor" format="color" />
+        <attr name="cornerRadius" format="dimension" />
+        <attr name="progress" />
+        <attr name="minProgress" />
+        <attr name="maxProgress" />
+        <attr name="progressMargin" format="dimension" />
+    </declare-styleable>
+</resources>

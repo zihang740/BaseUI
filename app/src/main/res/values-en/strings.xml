@@ -1,0 +1,27 @@
+<resources>
+    <string name="base_app_name">BaseUI</string>
+    <string name="base_loading">Loading...</string>
+    <string name="base_update_to">Upgrade</string>
+    <string name="base_content">Content</string>
+    <string name="base_go_update">Upgrade Now</string>
+    <string name="base_title">Title</string>
+    <string name="base_message">Message</string>
+    <string name="base_select_more">See More</string>
+    <string name="base_alert_mssage">Alert Message</string>
+    <string name="base_confirm">Confirm</string>
+    <string name="base_cancel">Cancel</string>
+    <string name="base_no_content">No Content</string>
+    <string name="base_choose">Shopping</string>
+    <string name="base_window_shopping">Window Shopping</string>
+    <string name="base_no_life_loading">Best Life...</string>
+    <string name="base_down_refresh">Down Refresh</string>
+    <string name="base_no_network">No Network</string>
+    <string name="base_submit_wait">Submitting, Please Ait</string>
+    <string name="base_no_file">Not File</string>
+    <string name="base_in_request">No Click,In Request...</string>
+    <string name="base_no_download_apk">Download app file not found, please install manually</string>
+    <string name="base_login_not_success">立即登录,开启奇妙之旅</string>
+    <string name="base_login_again_success">登录已过期,请重新登录</string>
+    <string name="base_login">Sign in</string>
+    <string name="base_login_later_on">Later on</string>
+</resources>

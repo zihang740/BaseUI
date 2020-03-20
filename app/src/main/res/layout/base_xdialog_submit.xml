@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:wheel="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@drawable/base_view_xdialog_submit_bg"
+              android:gravity="center"
+              android:minHeight="100dp"
+              android:minWidth="100dp"
+              android:orientation="vertical"
+              android:padding="15dp">
+
+
+    <com.hzh.frame.widget.xloading.ProgressWheel
+        android:id="@+id/progress_wheel"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        wheel:matProg_barColor="@color/white"
+        wheel:matProg_barWidth="2dp"
+        wheel:matProg_progressIndeterminate="true"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="@string/base_submit_wait"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
+</LinearLayout>

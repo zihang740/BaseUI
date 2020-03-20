@@ -1,0 +1,27 @@
+<resources>
+    <string name="base_app_name">BaseUI</string>
+    <string name="base_loading">加载中...</string>
+    <string name="base_update_to">升级到新版本</string>
+    <string name="base_content">内容</string>
+    <string name="base_go_update">立即升级</string>
+    <string name="base_title">标题</string>
+    <string name="base_message">消息</string>
+    <string name="base_select_more">查看更多</string>
+    <string name="base_alert_mssage">提示信息</string>
+    <string name="base_confirm">确认</string>
+    <string name="base_cancel">取消</string>
+    <string name="base_no_content">空空如也</string>
+    <string name="base_choose">来挑几件好货吧</string>
+    <string name="base_window_shopping">随便逛逛</string>
+    <string name="base_no_life_loading">玩命加载中...</string>
+    <string name="base_down_refresh">下拉刷新</string>
+    <string name="base_no_network">世界上最遥远的距离就是没有网</string>
+    <string name="base_submit_wait">提交中,请稍等</string>
+    <string name="base_no_file">文件不存在</string>
+    <string name="base_in_request">别点了,请求正在途中...</string>
+    <string name="base_no_download_apk">未找到下载的APP文件,请手动安装</string>
+    <string name="base_login_not_success">立即登录,开启奇妙之旅</string>
+    <string name="base_login_again_success">登录已过期,请重新登录</string>
+    <string name="base_login">登录</string>
+    <string name="base_login_later_on">再逛逛</string>
+</resources>

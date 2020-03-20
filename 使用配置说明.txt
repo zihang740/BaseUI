@@ -1,0 +1,40 @@
+﻿数据库:ActiveAndroid
+1.配置:AndroidManifest.xml(可直接复制一下配置修改)
+    <!-- ActiveAndroid数据库框架必须加上这个,不然部分手机要崩溃,特别是化为8.0以上系统(android:authorities=<your.package.name>) -->
+    <provider
+        android:name="com.activeandroid.content.ContentProvider"
+        android:authorities="输入APP包名称(如:com.hzh.frame)"
+        android:exported="false"/>
+    <!-- 数据库 | 名称-->
+    <meta-data
+        android:name="AA_DB_NAME"
+        android:value="BaseUI.db"/>
+	<!-- 数据库 | 版本号-->
+    <meta-data
+        android:name="AA_DB_VERSION"
+        android:value="1"/>b
+	<!-- 数据库 | 配置你需要的对应的映射关系表实体类-->
+	<meta-data
+        android:name="AA_MODELS"
+        android:value="com.hzh.frame.comn.model.BaseHttpCache,
+                       com.hzh.frame.comn.model.BaseHttpRequest,
+		               继续加入自己的实体类集合,前面2个实体类别删除了"/>
+2.配置最外层的build.gradle:
+	allprojects {
+        repositories {
+            //ActiveAndroid 需要的Maven地址
+            maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        }
+    }
+3.更新:
+    在main目录下的assets目录添加migrations目录,
+	并按对应AndroidManifest.xml中配置的 数据库版本号.sql(如:AA_DB_VERSION=1,响应的sql文件为1.sql)
+	
+路由:Arouter
+1:在各个模块引入Arouter的注解处理器--->annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
+
+适配:Android各版本
+Android 9.0:
+   1.解决Android P限制了非加密的流量请求问题(https://blog.csdn.net/w180600/article/details/85230778)
+      在AndroidManifest.xml中配置android:networkSecurityConfig="@xml/network_config"
+      
