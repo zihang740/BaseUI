@@ -54,7 +54,7 @@ public abstract class BaseGroupUI extends ActivityGroup implements SwipeRefreshL
     protected void onCreateBefore(){
         CloseAppUtil.activityList.add(this);
         //软键盘弹出不顶走Activity页面
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         //设置屏幕方向
         setRequestedOrientation(setScreenDirection());
         //获取Layout布局
