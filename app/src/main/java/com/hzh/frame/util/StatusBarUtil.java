@@ -51,7 +51,7 @@ public class StatusBarUtil {
      * @param color    状态栏颜色值
      */
     public static void setColor(Activity activity, @ColorInt int color) {
-        setColor(activity, color);
+        setColor(activity, color,0);
     }
 
     /**

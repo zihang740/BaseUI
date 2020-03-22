@@ -61,7 +61,7 @@ public abstract class BaseUI extends RxFragmentActivity implements OnRefreshList
 	protected void onCreateBefore(){
 		CloseAppUtil.activityList.add(this);
 		//软键盘弹出不顶走Activity页面
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 		//设置屏幕方向
 		setRequestedOrientation(setScreenDirection());
 		//获取Layout布局
