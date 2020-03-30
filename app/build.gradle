@@ -112,7 +112,6 @@ dependencies {
 
     api 'com.baidu.mobstat:mtj-sdk-circle:3.9.7.1'//百度移动统计
     api 'com.github.lecho:hellocharts-android:v1.5.8'//图表工具
-    api 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'//数据库框架
 
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
 }
