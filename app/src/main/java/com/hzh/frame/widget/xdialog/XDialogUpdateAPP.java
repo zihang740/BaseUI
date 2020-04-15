@@ -1,6 +1,5 @@
 package com.hzh.frame.widget.xdialog;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -20,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hzh.frame.R;
 import com.hzh.frame.core.BaseSP;

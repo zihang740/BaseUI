@@ -50,8 +50,10 @@ public class XDialog2Button extends Dialog {
             dismiss();
         });
         findViewById(R.id.cancel).setOnClickListener(view -> {
+            callback.onFail(null);
             dismiss();
         });
+        setOnCancelListener(view -> callback.onFail(null));
         return this;
     }
 
