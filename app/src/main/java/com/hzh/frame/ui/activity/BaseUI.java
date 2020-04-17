@@ -204,14 +204,14 @@ public abstract class BaseUI extends RxFragmentActivity implements OnRefreshList
 	 * 提示信息
 	 * @param msg 提示信息
 	 * */
-	protected void alert(String msg) {
+    public void alert(String msg) {
         BaseToast.getInstance().setMsg(R.id.content,msg).show();
 	}
 	
 	/**
 	 * 显示加载框 加载中 (在setContentView之后添加)
 	 * */
-	protected void showLoding() {
+	public void showLoding() {
 		loadingView.setVisibility(View.VISIBLE);
 		((LinearLayout)loadingView.findViewById(R.id.loading)).setVisibility(View.VISIBLE);
 		((LinearLayout)loadingView.findViewById(R.id.loadingFail)).setVisibility(View.GONE);
@@ -220,7 +220,7 @@ public abstract class BaseUI extends RxFragmentActivity implements OnRefreshList
 	/**
 	 * 显示加载框->加载失败->点击重载
 	 * */
-	protected void showLodingFail() {
+    public void showLodingFail() {
 		loadingView.setVisibility(View.VISIBLE);
 		((LinearLayout)loadingView.findViewById(R.id.loading)).setVisibility(View.GONE);
 		((LinearLayout)loadingView.findViewById(R.id.loadingFail)).setVisibility(View.VISIBLE);
@@ -236,7 +236,7 @@ public abstract class BaseUI extends RxFragmentActivity implements OnRefreshList
     /**
      * 显示加载框->加载失败->点击重载
      * */
-    protected void showLodingFailCall() {
+    public void showLodingFailCall() {
         loadingView.setVisibility(View.VISIBLE);
         loadingView.findViewById(R.id.loading).setVisibility(View.GONE);
         loadingView.findViewById(R.id.loadingFail).setVisibility(View.VISIBLE);
@@ -251,12 +251,12 @@ public abstract class BaseUI extends RxFragmentActivity implements OnRefreshList
     /**
      * 显示加载框->加载失败->点击重载
      * */
-    protected void showLodingFailCallMethod() {}
+    public void showLodingFailCallMethod() {}
 	
 	/**
 	 * 关闭加载框
 	 * */
-	protected void dismissLoding() {
+    public void dismissLoding() {
 		loadingView.setVisibility(View.GONE);
 	}
 	
