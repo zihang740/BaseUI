@@ -361,8 +361,7 @@ public class BaseHttp {
             Iterator<String> it = params.keys();
             while(it.hasNext()){
                 String key = it.next();
-                String value = params.getString(key);
-                paramsMap.put(key,value);
+                paramsMap.put(key,params.get(key));
             }
         } catch (JSONException e) {
             e.printStackTrace();

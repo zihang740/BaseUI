@@ -11,7 +11,7 @@ public class BaseInitData {
     
   public static String http_client_url = "请求接口地址";
   public static String http_client_key = "请求接口地址Key";
-  public static int http_client_version = 412;//请求接口号
+  public static int http_client_version = 413;//请求接口号
 
   public static String ws_client_url = "WebSoket请求地址";
   
