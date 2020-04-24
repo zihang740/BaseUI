@@ -324,11 +324,19 @@ public class BaseHttp {
             e.printStackTrace();
         }
         cacheInterceptor(port,params,callBack);
-        HashMap<String,Object> paramsMap=new HashMap<>();
-        paramsMap.put("num", port+"");
-        paramsMap=Util.createV2HttpKey(paramsMap,params);
-        paramsMap=setRequestBodyParams(paramsMap,params);
-        return RequestBody.create(JSON,new Gson().toJson(paramsMap));
+//        HashMap<String,Object> paramsMap=new HashMap<>();
+//        paramsMap.put("num", port+"");
+//        paramsMap=Util.createV2HttpKey(paramsMap,params);
+//        paramsMap=setRequestBodyParams(paramsMap,params);
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("num", port+"");
+            jsonObject=Util.createV2HttpKey(jsonObject,params);
+            jsonObject=setRequestBodyParams(jsonObject,params);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return RequestBody.create(JSON,jsonObject.toString());
     }
 
     /**
@@ -356,7 +364,7 @@ public class BaseHttp {
         return body.build();
     }
 
-    public HashMap<String,Object> setRequestBodyParams(HashMap<String,Object> paramsMap,JSONObject params){
+    public JSONObject setRequestBodyParams(JSONObject paramsMap,JSONObject params){
         try {
             Iterator<String> it = params.keys();
             while(it.hasNext()){

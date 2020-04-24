@@ -369,7 +369,7 @@ public class Util {
     /**
      * 接口加密
      * */
-    public static HashMap<String,Object> createV2HttpKey(HashMap<String,Object> paramsMap,JSONObject params) {
+    public static JSONObject createV2HttpKey(JSONObject paramsMap,JSONObject params) {
         try {
             String key="";
             String sign="";
