@@ -88,7 +88,17 @@ public class BaseHttp {
      * @param callBack 回调方法
      * **/
     public void query(String path, HttpCallBack callBack) {
-        query(path,null,callBack);
+        query(config.getBaseUrl(),path,callBack);
+    }
+
+    /**
+     * 查询接口(post)
+     * @param url 请求地址
+     * @param path 接口编号
+     * @param callBack 回调方法
+     * **/
+    public void query(String url,String path, HttpCallBack callBack) {
+        query(url,path,null,callBack);
     }
 
     /**
@@ -97,10 +107,21 @@ public class BaseHttp {
      * @param params 查询参数
      * @param callBack 回调方法
      * **/
-    public void query(String path, JSONObject params, HttpCallBack callBack) {
+    public void query(String path, JSONObject params,HttpCallBack callBack) {
+        query(config.getBaseUrl(),path,params,callBack);
+    }
+
+    /**
+     * 查询接口(post)
+     * @param url 请求地址
+     * @param path 接口编号
+     * @param params 查询参数
+     * @param callBack 回调方法
+     * **/
+    public void query(String url,String path, JSONObject params, HttpCallBack callBack) {
         callBack.setPort(path);//接口编号
         callBack.setRequestType(HttpCallBack.REQUEST_QUERY);
-        post(config.getBaseUrl()+path,createRequestBody(path,params,callBack),callBack);
+        post(url+path,createRequestBody(path,params,callBack),callBack);
     }
 
 

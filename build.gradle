@@ -2,15 +2,16 @@ apply from: "config.gradle"
 
 buildscript {
     repositories {
-        maven{ url = "http://maven.aliyun.com/nexus/content/groups/public/" }
-        jcenter()
+       // 添加阿里云 maven 地址        
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        // jcenter()
         google()
-        maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
     }
     dependencies {
         //这里的gradle代表gradle插件版本
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:4.1.0'
         //ShareSDK
         classpath "com.mob.sdk:MobSDK:+"
         //发布到jitpack.io远程maven仓库
@@ -20,10 +21,11 @@ buildscript {
 
 allprojects {
     repositories {
-        maven{ url = "http://maven.aliyun.com/nexus/content/groups/public/" }
-        jcenter()
+        // 添加阿里云 maven 地址        
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        // jcenter()
         google()
-        maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
     }
 }
