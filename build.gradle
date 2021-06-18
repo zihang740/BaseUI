@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         //这里的gradle代表gradle插件版本
-        classpath 'com.android.tools.build:gradle:4.2.0'
+        classpath 'com.android.tools.build:gradle:4.1.0'
         //ShareSDK
         classpath "com.mob.sdk:MobSDK:+"
         //发布到jitpack.io远程maven仓库
