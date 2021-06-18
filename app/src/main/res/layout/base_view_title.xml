@@ -32,7 +32,8 @@
             android:maxLines="1"
             android:text="@string/base_title"
             android:textColor="@color/base_title_content"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/comn_title_right"
@@ -42,7 +43,9 @@
             android:clickable="true"
             android:gravity="center"
             android:minWidth="48dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10">
 
             <ImageView
                 android:id="@+id/comn_title_right_icon"

@@ -201,7 +201,7 @@ public class XDialogUpdateAPP extends Dialog {
         /**
          * Andoird 8.0+申请APP所需的权限(REQUEST_INSTALL_PACKAGES:请求安装未知应用来源的权限)
          * */
-        if (android.os.Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26) {
             boolean hasInstallPermission = activity.getPackageManager().canRequestPackageInstalls();
             if (!hasInstallPermission) {//判断是否通过安装未知来源权限
                 toInstallPermissionSettingIntent();

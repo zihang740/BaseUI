@@ -1,12 +1,14 @@
 package com.hzh.frame.ui.fragment;
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -35,6 +37,8 @@ import java.util.List;
  * */
 public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implements OnRefreshListener {
 
+    public final static int LOAD_PATTERN_OTHER= 1;//加载其他数据源
+    
 	private Class<T> modelClass;
 	private RecyclerView mRecyclerView;
 	private LinearLayout mRecyclerViewBg;
@@ -42,15 +46,6 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
 	private BaseRecyclerAdapter<T> mAdapter;
 	private int[] pageInfo;//int[0]:起始页码;int[1]:当前页码 ;int[2]:每页显示数
 	private boolean httpState=true;
-    /**
-     * 加载模式 <br />
-     * 0:1.先加载本地数据;
-     *   2.再加载网络数据 <br />
-     * 1:1.只加载本地数据 <br />
-     * 2:1.只加载网络数据 <br />
-     * 3:1.先下载网络数据到本地;
-     *   2.再加载本地数据 <br />
-     * */
 	private int loadPattern=0;
 	/**设置框架加载网络数据后是否更新本地数据库 <br />false:不更新 <br />true:更新*/
 	private boolean updLocalData=true;
@@ -60,12 +55,12 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
 		pageInfo=setPageInfo();
     	//获取T.Class
     	modelClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-    	View view = setContentView(setLayoutId());
+    	setContentView(setLayoutId());
     	//下拉刷新、加载更多
-    	mSwipeRefreshLayout=(XSwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+    	mSwipeRefreshLayout= findViewById(R.id.swipeRefresh);
     	mSwipeRefreshLayout.setColorSchemeResources(R.color.base_refresh);
     	mSwipeRefreshLayout.setOnRefreshListener(this);
-    	mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+    	mRecyclerView = findViewById(R.id.recyclerView);
     	mRecyclerView.setHasFixedSize(true);
     	mRecyclerView.setLayoutManager(setRecyclerViewLayoutManager());
         mRecyclerView.addItemDecoration(setRecyclerViewItemDecoration());
@@ -74,7 +69,7 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
         mRecyclerView.setAdapter(mAdapter);
         ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 		//显示背景图片
-    	mRecyclerViewBg=(LinearLayout) view.findViewById(R.id.recyclerViewBg);
+    	mRecyclerViewBg= findViewById(R.id.recyclerViewBg);
     	mRecyclerViewBg.setVisibility(View.VISIBLE);
 		if(setHeadLayoutId() != 0) {
             mAdapter.setHeaderView(inflater.inflate(setHeadLayoutId(),mRecyclerView,false));
@@ -82,7 +77,8 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
 		if(setFooterLayoutId() != 0){
             mAdapter.setFooterView(inflater.inflate(setFooterLayoutId(),mRecyclerView,false));
         }
-        bindView(view);
+        bindView();
+        loadLocalData();//默认第一次都加载本地数据
         loadData();
 	}
 	
@@ -90,35 +86,25 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
 	public void onRefresh() {
 		//下拉刷新
 		pageInfo[1]=pageInfo[0];
-        loadData();
         mSwipeRefreshLayout.setProgressViewOffset(false, 0, 100);
         mSwipeRefreshLayout.setRefreshing(true);
+        loadData();
 	}
 
     //统一加载数据入口
     public void loadData(){
         switch (loadPattern) {
-            case 0://先加载本地再加载网络数据
-                loadLocalData();
-                loadNetworkData(pageInfo[1],pageInfo[2]);
-                break;
-            case 1://只加载本地数据
-                loadLocalData();
-                break;
-            case 2://只加载网络数据
-                loadNetworkData(pageInfo[1],pageInfo[2]);
-                break;
-            case 3://先加载网络数据在加载本地数据
-                loadNetworkData(pageInfo[1],pageInfo[2]);
-                break;
-            case 4://加载其他数据源数据
+            case LOAD_PATTERN_OTHER://加载其他数据源数据
                 loadOtherData(pageInfo[1], pageInfo[2]);
+                break;
+            default://加载网络数据
+                loadNetworkData(pageInfo[1],pageInfo[2]);
                 break;
         }
     }
 
     // 加载本地缓存数据(这里只做第一次点击进来第一个页面的缓存)
-    private void loadLocalData() {
+    public void loadLocalData() {
         From from=new Select().from(modelClass);
         //获取查询条件
         from=setSqlParams(from);
@@ -128,7 +114,6 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
         mSwipeRefreshLayout.setRefreshing(false);
         if(mAdapter.getDatas()!= null && mAdapter.getDatas().size()>0){
             mAdapter.setDatas(mDatas);
-            mAdapter.notifyDataSetChanged();
         }else{
             mAdapter.setDatas(mDatas);
         }
@@ -156,7 +141,7 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
             e.printStackTrace();
         }
         
-        BaseHttp.getInstance().query(setHttpPath(), params, new CallBack(page,limit));
+        BaseHttp.getInstance().query(setHttpUrl(),setHttpPath(), params, new CallBack(page,limit));
     }
     
     class CallBack extends HttpCallBack{
@@ -205,20 +190,18 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
                 }
                 if(pageInfo[0]==pageInfo[1]){
                     //下拉刷新
-                    if(loadPattern==3){
-                        loadLocalData();
-                    }else{
-                        mAdapter.setDatas(mDatas);
-                    }
+                    mAdapter.setDatas(mDatas);
                     if(mDatas.size()>=limit){
                         mAdapter.setFooterView(createFooterView());
                     }
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }else{
                     //加载更多
-                    if(mDatas.size()<limit){
+                    if (mDatas.size() < limit) {
                         mAdapter.removeFooterView();
                     }
                     mAdapter.getDatas().addAll(mDatas);
+                    mAdapter.notifyDataSetChanged();
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
                 //去除背景图片
@@ -234,11 +217,7 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
                     if(mDatas==null){
                         mDatas=new ArrayList<T>();
                     }
-                    if(loadPattern==3){
-                        loadLocalData();
-                    }else{
-                        mAdapter.setDatas(mDatas);
-                    }
+                    mAdapter.setDatas(mDatas);
                     //显示背景图片
                     mRecyclerViewBg.setVisibility(View.VISIBLE);
                 }else{
@@ -257,6 +236,7 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
         if(mAdapter!=null && mAdapter.getFooterView()!=null){
             mAdapter.getFooterView().setClickable(true);
         }
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     //处理请求返回失败的json
@@ -317,16 +297,13 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
         XListViewFooter mFooterView = new XListViewFooter(getActivity());
         mFooterView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,RecyclerView.LayoutParams.WRAP_CONTENT));
         mFooterView.setState(XListViewFooter.STATE_NORMAL);//设置加载更多状态
-        mFooterView.setBackgroundColor(ContextCompat.getColor(mRecyclerView.getContext(),R.color.white));
-        mFooterView.setOnClickListener(new View.OnClickListener() {//绑定脚监听
-            @Override
-            public void onClick(View v) {
-                //保证多次响应只响应一次
-                if(mAdapter.getFooterView().isClickable()==true) {
-                    ((XListViewFooter) v).setState(XListViewFooter.STATE_LOADING);
-                    pageInfo[1]++;
-                    loadNetworkData(pageInfo[1],pageInfo[2]);
-                }
+        //绑定脚监听
+        mFooterView.setOnClickListener(v -> {
+            //保证多次响应只响应一次
+            if(mAdapter.getFooterView().isClickable()==true) {
+                ((XListViewFooter) v).setState(XListViewFooter.STATE_LOADING);
+                pageInfo[1]++;
+                loadData();
             }
         });
         return mFooterView;
@@ -429,7 +406,7 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
 	/**
 	 * 绑定布局文件关联
 	 * */
-	protected void bindView(View view){};
+	protected void bindView(){};
 
     /**
      * 绑定头布局文件关联
@@ -449,6 +426,10 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
      * */
     protected From setDeleteSqlParams(From from){return from;};
     /**
+     * 设置请求位置
+     * */
+    protected String setHttpUrl(){return BaseHttp.getInstance().getConfig().getBaseUrl();}
+    /**
      * 设置请求路径
      * */
     protected String setHttpPath(){return "";}
@@ -460,22 +441,15 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
 	 * 处理HTTP请求成功回参数据
 	 * */
     protected List<T> handleHttpData(JSONObject response){return null;}
-	/**
-	 * 处理HTTP请求失败回参数据
-	 * */
-	protected void handleHttpDataFailure(){
-        switch (loadPattern){
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                showLodingFail();
-                break;
-            case 3:
-                break;
+    /**
+     * 处理HTTP请求失败回参数据
+     */
+    protected void handleHttpDataFailure() {
+        if((getAdapter()==null || getAdapter().getDatas() == null || getAdapter().getDatas().size() == 0) && pageInfo[0] == pageInfo[1]){
+            //本地无数据,并且加载第一页
+            showLodingFail();
         }
-	}
+    }
     /**
      * 处理HTTP请求状态
      * @param httpState 默认正常:true;终止页面响应:false
@@ -483,10 +457,6 @@ public abstract class AbsRecyclerViewFM<T extends Model> extends BaseFM implemen
     protected void setHttpState(boolean httpState){this.httpState=httpState;}
     /**
      * 设置加载模式 <br />
-     * 0:先加载本地再加载网络数据 <br />
-     * 1:只加载本地数据 <br />
-     * 2:只加载网络数据
-     * 3:先加载网络数据在加载本地数据
      * */
     protected void setLoadPattern(int loadPattern){this.loadPattern=loadPattern;}
     /**

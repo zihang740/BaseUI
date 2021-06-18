@@ -332,7 +332,7 @@
     <color name="base_button_up">#ff9c00</color>
     <color name="base_button_down">#d88007</color>
     <!-- 线条颜色 -->
-    <color name="base_line_color">#f5f4fa</color>
+    <color name="base_line_color">#333333</color>
     
     <color name="base_131313">#131313</color>
     <color name="base_8a8a8a">#8a8a8a</color>

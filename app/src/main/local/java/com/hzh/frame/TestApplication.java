@@ -8,5 +8,5 @@ import android.app.Application;
  * @date 2018/3/22
  */
 
-public class TestApplication extends Application{
+public class TestApplication extends BaseApplication{
 }

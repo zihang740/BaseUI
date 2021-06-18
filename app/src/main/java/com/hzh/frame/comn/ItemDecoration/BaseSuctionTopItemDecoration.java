@@ -33,11 +33,11 @@ public class BaseSuctionTopItemDecoration extends RecyclerView.ItemDecoration {
         paint = new Paint();
         paint.setColor(ContextCompat.getColor(mContext, R.color.base_title_bg_end));
         linePaint = new Paint();
-        linePaint.setColor(ContextCompat.getColor(mContext, com.hzh.frame.R.color.base_8a8a8a));
+        linePaint.setColor(ContextCompat.getColor(mContext, R.color.base_8a8a8a));
         textPaint = new TextPaint();
         textPaint.setAntiAlias(true);
         textPaint.setTextSize(Util.dip2px(context,12));
-        textPaint.setColor(ContextCompat.getColor(context, com.hzh.frame.R.color.white));
+        textPaint.setColor(ContextCompat.getColor(context, R.color.white));
         textPaint.setTextAlign(Paint.Align.LEFT);
         groupHeight= Util.dip2px(context,25);
     }

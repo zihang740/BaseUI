@@ -1,5 +1,6 @@
 package com.hzh.frame.comn.ItemDecoration;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -24,15 +25,29 @@ public class BaseGridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
     /**
      * @param spanCount gridLayoutManager 列数
-     * @param dividerWidthDp 分割块宽高,单位:dp
      */
-    public BaseGridSpacingItemDecoration(Context context, int spanCount, int dividerWidthDp) {
+    public BaseGridSpacingItemDecoration(int spanCount) {
         this.spanCount = spanCount;
 
         this.dividerPaint = new Paint();
         this.dividerPaint.setColor(Color.BLUE);
 
-        this.dividerWidth = Util.dip2px(context, dividerWidthDp);
+        this.dividerWidth = 0;
+        this.dividerWidthTop = dividerWidth / 2;
+        this.dividerWidthBot = dividerWidth - dividerWidthTop;
+    }
+    
+    /**
+     * @param spanCount gridLayoutManager 列数
+     * @param dividerWidthPx 分割块宽高,单位:dp
+     */
+    public BaseGridSpacingItemDecoration(int spanCount, int dividerWidthPx) {
+        this.spanCount = spanCount;
+
+        this.dividerPaint = new Paint();
+        this.dividerPaint.setColor(Color.BLUE);
+
+        this.dividerWidth = dividerWidthPx;
         this.dividerWidthTop = dividerWidth / 2;
         this.dividerWidthBot = dividerWidth - dividerWidthTop;
     }

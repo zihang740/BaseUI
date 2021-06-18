@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hzh.frame.R;
+
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> mViews;//集合类，layout里包含的View,以view的id作为key，value是view对象
     private Context mContext;//上下文对象
@@ -63,6 +65,12 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public RecyclerViewHolder setTextColor(int viewId, String color) {
         TextView view = findViewById(viewId);
         view.setTextColor(Color.parseColor(color));
+        return this;
+    }
+
+    public RecyclerViewHolder setTextColor(int viewId, int sourcesColor) {
+        TextView view = findViewById(viewId);
+        view.setTextColor(mContext.getResources().getColor(sourcesColor));
         return this;
     }
 

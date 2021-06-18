@@ -124,6 +124,15 @@ public class BaseHttp {
         post(url+path,createRequestBody(path,params,callBack),callBack);
     }
 
+    /**
+     * 写入接口(post) | 默认拦截重复请求并弹出请求窗口(这里拦截只判断port,有需求可以把requestParams加进判断中)
+     * @param path 接口编号
+     * @param callBack 回调方法
+     * **/
+    public <T extends Activity> void write(String path, HttpCallBack callBack) {
+        write(path,null,callBack);
+    }
+    
 
     /**
      * 写入接口(post) | 默认拦截重复请求并弹出请求窗口(这里拦截只判断port,有需求可以把requestParams加进判断中)
@@ -132,19 +141,9 @@ public class BaseHttp {
      * @param callBack 回调方法
      * **/
     public <T extends Activity> void write(String path, JSONObject params, HttpCallBack callBack) {
-        write(null,path,params,callBack);
+        write(path,params,null,callBack);
     }
 
-    /**
-     * 写入接口(post) | 默认拦截重复请求并弹出请求窗口(这里拦截只判断port,有需求可以把requestParams加进判断中)
-     * @param activity 当前活动(主要作用于弹出请求加载框,传null表示不需要请求加载框)
-     * @param path 接口编号
-     * @param params 写入参数
-     * @param callBack 回调方法
-     * **/
-    public <T extends Activity> void write(T activity,String path, JSONObject params, HttpCallBack callBack) {
-        write(activity,path,params,null,callBack);
-    }
 
     /**
      * 写入接口(post) | 默认拦截重复请求并弹出请求窗口(这里拦截只判断port,有需求可以把requestParams加进判断中)
@@ -153,20 +152,8 @@ public class BaseHttp {
      * @param fileList 待上传的文件列表集合(注:集合Map数据格式 <name,上传供后台取的文件名>,<file,上传文件>)
      * @param callBack 回调方法
      * **/
-    public <T extends Activity> void write(String path, JSONObject params, List<HashMap<String,Object>> fileList, HttpCallBack callBack) {
-        write(null,path,params,fileList,callBack);
-    }
-
-    /**
-     * 写入接口(post) | 默认拦截重复请求并弹出请求窗口(这里拦截只判断port,有需求可以把requestParams加进判断中)
-     * @param activity 当前活动(主要作用于弹出请求加载框,传null表示不需要请求加载框)
-     * @param path 接口编号
-     * @param params 写入参数
-     * @param fileList 待上传的文件列表集合(注:集合Map数据格式 <name,上传供后台取的文件名>,<file,上传文件>)
-     * @param callBack 回调方法
-     * **/
-    public <T extends Activity> void write(T activity,String path, JSONObject params,List<HashMap<String,Object>> fileList, HttpCallBack callBack) {
-        if(!repeatHttpInterceptor(path,activity,callBack)){
+    public <T extends Activity> void write(String path, JSONObject params,List<HashMap<String,Object>> fileList, HttpCallBack callBack) {
+        if(!repeatHttpInterceptor(path,callBack)){
             callBack.setPort(path);//接口编号
             callBack.setRequestType(HttpCallBack.REQUEST_WRITE);
             if(fileList == null || fileList.size()==0){//非文件上传
@@ -202,25 +189,14 @@ public class BaseHttp {
     }
 
     /**
-     * 文件上传 | 默认拦截重复请求并弹出请求窗口(这里拦截只判断port,有需求可以把requestParams加进判断中)
+     * 文件 | 默认拦截重复请求并弹出请求窗口(这里拦截只判断port,有需求可以把requestParams加进判断中)
      * @param path 接口编号
      * @param pathFull path是否是全路径
      * @param fileList 待上传的文件列表集合(注:集合Map数据格式 <name,上传供后台取的文件名>,<file,上传文件>)
      * @param callBack 回调方法
      * **/
     public void uploadFile(String path,boolean pathFull,List<HashMap<String,Object>> fileList, HttpCallBack callBack){
-        uploadFile(null,path,pathFull,fileList,callBack);
-    }
-    /**
-     * 文件 | 默认拦截重复请求并弹出请求窗口(这里拦截只判断port,有需求可以把requestParams加进判断中)
-     * @param activity 当前活动(主要作用于弹出请求加载框,传null表示不需要请求加载框)
-     * @param path 接口编号
-     * @param pathFull path是否是全路径
-     * @param fileList 待上传的文件列表集合(注:集合Map数据格式 <name,上传供后台取的文件名>,<file,上传文件>)
-     * @param callBack 回调方法
-     * **/
-    public <T extends Activity> void uploadFile(T activity,String path,boolean pathFull,List<HashMap<String,Object>> fileList, HttpCallBack callBack){
-        if(!repeatHttpInterceptor(path,activity,callBack)) {
+        if(!repeatHttpInterceptor(path,callBack)) {
             callBack.setPort(path);//接口编号
             callBack.setRequestType(HttpCallBack.REQUEST_WRITE);
             if(pathFull){//是全路径,直接调用
@@ -270,11 +246,10 @@ public class BaseHttp {
     /**
      * 重复发送http拦截器
      * @param port 接口编号
-     * @param activity 当前活动窗口
      * @param callBack 继承至HttpCallBack
      * @return true 拦截 false 不拦截
      * **/
-    public boolean repeatHttpInterceptor(String port, Activity activity, HttpCallBack callBack){
+    public boolean repeatHttpInterceptor(String port, HttpCallBack callBack){
         BaseHttpRequest model=new Select().from(BaseHttpRequest.class).where("port = ?",port).executeSingle();
         if(model!=null){
             //当前port接口有请求记录
@@ -283,15 +258,15 @@ public class BaseHttp {
                 return true;
             }else{//正常发送
                 model.setState(2).save();
-                if(activity!=null){
-                    callBack.setSubmit(new XDialogSubmit(activity).alert());
+                if(callBack.getActivity()!=null){
+                    callBack.setSubmit(new XDialogSubmit(callBack.getActivity()).alert());
                 }
             }
         }else{
             //当前port接口无请求记录
             new BaseHttpRequest().setPort(port).setState(2).setType(HttpCallBack.REQUEST_WRITE).save();
-            if(activity!=null){
-                callBack.setSubmit(new XDialogSubmit(activity).alert());
+            if(callBack.getActivity()!=null){
+                callBack.setSubmit(new XDialogSubmit(callBack.getActivity()).alert());
             }
         }
         return false;

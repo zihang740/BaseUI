@@ -1,5 +1,7 @@
 package com.hzh.frame.comn.callback;
 
+import android.app.Activity;
+
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
 import com.hzh.frame.BaseInitData;
@@ -35,6 +37,7 @@ public abstract class HttpCallBack{
     private Integer requestType;//请求类型 REQUEST_QUERY:读请求 REQUEST_WRITE:写请求
     private Integer responseType;//默认返回类型为JSONObject
     private Boolean cache;//是否缓存
+    private Activity activity;//当前活动窗口
     private MediaType mediaType;//文件上传类型 参考:okhttp的MediaType.parse属性(https://www.jianshu.com/p/4721d7b5e780)内含MIME 参考手册所有对照表
 
     public HttpCallBack(){
@@ -83,6 +86,11 @@ public abstract class HttpCallBack{
         return  this;
     }
 
+    public HttpCallBack setActivity(Activity activity) {
+        this.activity = activity;
+        return this;
+    }
+
     //响应缓存JSON | 默认无分页缓存
     public HttpCallBack cache(){
         this.cache=true;
@@ -107,6 +115,8 @@ public abstract class HttpCallBack{
     public Integer getRequestType() {
         return requestType;
     }
+
+    public Activity getActivity() { return activity; }
 
     /**---------------------------------------------------------------------------------------------**/
 

@@ -112,7 +112,7 @@ public abstract class BaseUI extends RxFragmentActivity implements OnRefreshList
                                     .setCallback(new CallBack() {
                                         @Override
                                         public void onSuccess(Object object) {
-                                            ARouter.getInstance().build("/login/LoginUI").navigation();
+                                            ARouter.getInstance().build("/login/LoginWordsUI").navigation();
                                         }
                                     }).show();
                         }

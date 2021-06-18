@@ -1,12 +1,12 @@
 package com.hzh.frame.ui.activity;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -30,28 +30,20 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * 缓存只做第一次显示数据用(其他加载及时响应)
  */
 public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implements OnRefreshListener {
 
+    public final static int LOAD_PATTERN_OTHER = 1;//加载其他数据源
+
     private Class<T> modelClass;
     private RecyclerView mRecyclerView;
     private LinearLayout mRecyclerViewBg;
     public XSwipeRefreshLayout mSwipeRefreshLayout;
-    private MyAdapter mAdapter;
+    private BaseRecyclerAdapter<T> mAdapter;
     private int[] pageInfo;//int[0]:起始页码;int[1]:当前页码 ;int[2]:每页显示数
     private boolean httpState = true;
-    /**
-     * 加载模式 <br />
-     * 0:1.先加载本地数据;
-     *   2.再加载网络数据 <br />
-     * 1:1.只加载本地数据 <br />
-     * 2:1.只加载网络数据 <br />
-     * 3:1.先下载网络数据到本地;
-     *   2.再加载本地数据 <br />
-     */
     private int loadPattern = 0;
     /**
      * 设置框架加载网络数据后是否更新本地数据库 <br />false:不更新 <br />true:更新
@@ -65,27 +57,28 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
         modelClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         setContentView(setLayoutId());
         //下拉刷新、加载更多
-        mSwipeRefreshLayout = (XSwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.base_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(setRecyclerViewLayoutManager());
         mRecyclerView.addItemDecoration(setRecyclerViewItemDecoration());
         mRecyclerView.addOnScrollListener(new MyOnScrollListener());
-        mAdapter = new MyAdapter(this, new ArrayList<T>());
+        mAdapter = setAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         //显示背景图片
-        mRecyclerViewBg = (LinearLayout) findViewById(R.id.recyclerViewBg);
+        mRecyclerViewBg = findViewById(R.id.recyclerViewBg);
         mRecyclerViewBg.setVisibility(View.VISIBLE);
-        if(setHeadLayoutId() != 0) {
-            mAdapter.setHeaderView(inflater.inflate(setHeadLayoutId(),mRecyclerView,false));
+        if (setHeadLayoutId() != 0) {
+            mAdapter.setHeaderView(inflater.inflate(setHeadLayoutId(), mRecyclerView, false));
         }
-        if(setFooterLayoutId() != 0){
-            mAdapter.setFooterView(inflater.inflate(setFooterLayoutId(),mRecyclerView,false));
+        if (setFooterLayoutId() != 0) {
+            mAdapter.setFooterView(inflater.inflate(setFooterLayoutId(), mRecyclerView, false));
         }
         bindView();
+        loadLocalData();//默认第一次都加载本地数据
         loadData();
     }
 
@@ -93,35 +86,25 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
     public void onRefresh() {
         //下拉刷新
         pageInfo[1] = pageInfo[0];
-        loadData();
         mSwipeRefreshLayout.setProgressViewOffset(false, 0, 100);
         mSwipeRefreshLayout.setRefreshing(true);
+        loadData();
     }
 
     //统一加载数据入口
     public void loadData() {
         switch (loadPattern) {
-            case 0://1.先加载本地数据;2.再加载网络数据
-                loadLocalData();
-                loadNetworkData(pageInfo[1], pageInfo[2]);
-                break;
-            case 1://1.只加载本地数据
-                loadLocalData();
-                break;
-            case 2://1.只加载网络数据
-                loadNetworkData(pageInfo[1], pageInfo[2]);
-                break;
-            case 3://1.先下载网络数据到本地;2.再加载本地数据
-                loadNetworkData(pageInfo[1], pageInfo[2]);
-                break;
-            case 4://加载其他数据源数据
+            case LOAD_PATTERN_OTHER://加载其他数据源数据
                 loadOtherData(pageInfo[1], pageInfo[2]);
+                break;
+            default://加载网络数据
+                loadNetworkData(pageInfo[1], pageInfo[2]);
                 break;
         }
     }
 
     // 加载本地缓存数据(这里只做第一次点击进来第一个页面的缓存)
-    private void loadLocalData() {
+    public void loadLocalData() {
         From from = new Select().from(modelClass);
         //获取查询条件
         from = setSqlParams(from);
@@ -129,10 +112,9 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
         List<T> mDatas = from.execute();
 
         mSwipeRefreshLayout.setRefreshing(false);
-        if(mAdapter.getDatas()!= null && mAdapter.getDatas().size()>0){
+        if (mAdapter.getDatas() != null && mAdapter.getDatas().size() > 0) {
             mAdapter.setDatas(mDatas);
-            mAdapter.notifyDataSetChanged();
-        }else{
+        } else {
             mAdapter.setDatas(mDatas);
         }
 
@@ -147,7 +129,8 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
     }
 
     // 加载其他数据源数据 | 提供重写
-    public void loadOtherData(int page, int limit) {}
+    public void loadOtherData(int page, int limit) {
+    }
 
     // 加载网络数据
     public void loadNetworkData(int page, int limit) {
@@ -158,10 +141,11 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        BaseHttp.getInstance().query(setHttpPath(), params, new CallBack(page, limit));
+
+        BaseHttp.getInstance().query(setHttpUrl(), setHttpPath(), params, new CallBack(page, limit));
     }
 
-    public class CallBack extends HttpCallBack {
+    class CallBack extends HttpCallBack {
         public int page;
         public int limit;
 
@@ -172,7 +156,7 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
 
         @Override
         public void onSuccess(JSONObject response) {
-            handleHttpSuccessJson(response,page,limit);
+            handleHttpSuccessJson(response, page, limit);
         }
 
         @Override
@@ -180,14 +164,14 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
             handleHttpFailJson();
         }
     }
-    
+
     //处理请求返回成功的json
-    public void handleHttpSuccessJson(JSONObject response,int page, int limit){
-        handleHttpSuccessJson(handleHttpData(response),page,limit);
+    public void handleHttpSuccessJson(JSONObject response, int page, int limit) {
+        handleHttpSuccessJson(handleHttpData(response), page, limit);
     }
 
     //处理请求返回成功的json
-    public void handleHttpSuccessJson(List<T> mDatas,int page, int limit){
+    public void handleHttpSuccessJson(List<T> mDatas, int page, int limit) {
         //只要有请求回来就关闭加载中状态
         if (null != mAdapter.getFooterView()) {
             ((XListViewFooter) mAdapter.getFooterView()).setState(XListViewFooter.STATE_NORMAL);
@@ -208,20 +192,18 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
                 }
                 if (pageInfo[0] == pageInfo[1]) {
                     //下拉刷新
-                    if (loadPattern == 3) {
-                        loadLocalData();
-                    } else {
-                        mAdapter.setDatas(mDatas);
-                    }
+                    mAdapter.setDatas(mDatas);
                     if (mDatas.size() >= limit) {
                         mAdapter.setFooterView(createFooterView());
                     }
+                    mSwipeRefreshLayout.setRefreshing(false);
                 } else {
                     //加载更多
                     if (mDatas.size() < limit) {
                         mAdapter.removeFooterView();
                     }
                     mAdapter.getDatas().addAll(mDatas);
+                    mAdapter.notifyDataSetChanged();
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
                 //去除背景图片
@@ -237,11 +219,7 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
                     if (mDatas == null) {
                         mDatas = new ArrayList<T>();
                     }
-                    if (loadPattern == 3) {
-                        loadLocalData();
-                    } else {
-                        mAdapter.setDatas(mDatas);
-                    }
+                    mAdapter.setDatas(mDatas);
                     //显示背景图片
                     mRecyclerViewBg.setVisibility(View.VISIBLE);
                 } else {
@@ -260,10 +238,11 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
         if (mAdapter != null && mAdapter.getFooterView() != null) {
             mAdapter.getFooterView().setClickable(true);
         }
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     //处理请求返回失败的json
-    public void handleHttpFailJson(){
+    public void handleHttpFailJson() {
         handleHttpDataFailure();
         //只要有请求回来就关闭加载中状态
         if (null != mAdapter.getFooterView()) {
@@ -316,6 +295,7 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
             super.onAttachedToRecyclerView(recyclerView);
             setSpanSize(recyclerView);
         }
+
     }
 
     /**
@@ -325,16 +305,13 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
         XListViewFooter mFooterView = new XListViewFooter(this);
         mFooterView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
         mFooterView.setState(XListViewFooter.STATE_NORMAL);//设置加载更多状态
-        mFooterView.setBackgroundColor(ContextCompat.getColor(mRecyclerView.getContext(), R.color.white));
-        mFooterView.setOnClickListener(new View.OnClickListener() {//绑定脚监听
-            @Override
-            public void onClick(View v) {
-                //保证多次响应只响应一次
-                if (mAdapter.getFooterView().isClickable() == true) {
-                    ((XListViewFooter) v).setState(XListViewFooter.STATE_LOADING);
-                    pageInfo[1]++;
-                    loadNetworkData(pageInfo[1], pageInfo[2]);
-                }
+        //绑定脚监听
+        mFooterView.setOnClickListener(v -> {
+            //保证多次响应只响应一次
+            if (mAdapter.getFooterView().isClickable() == true) {
+                ((XListViewFooter) v).setState(XListViewFooter.STATE_LOADING);
+                pageInfo[1]++;
+                loadData();
             }
         });
         return mFooterView;
@@ -360,33 +337,20 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
 
     //判断是否到达底部
     public static boolean isVisBottom(RecyclerView recyclerView) {
-        //方法1
-        //        GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-        //        //屏幕中最后一个可见子项的position
-        //        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-        //        //当前屏幕所看到的子项个数
-        //        int visibleItemCount = layoutManager.getChildCount();
-        //        //当前RecyclerView的所有子项个数
-        //        int totalItemCount = layoutManager.getItemCount();
-        //        //RecyclerView的滑动状态
-        //        int state = recyclerView.getScrollState();
-        //        if(visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1 && state == recyclerView.SCROLL_STATE_IDLE){
-        //            return true;
-        //        }else {
-        //            return false;
-        //        }
-
-        //方法2
-        if (recyclerView == null) {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        //屏幕中最后一个可见子项的position
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        //当前屏幕所看到的子项个数
+        int visibleItemCount = layoutManager.getChildCount();
+        //当前RecyclerView的所有子项个数
+        int totalItemCount = layoutManager.getItemCount();
+        //RecyclerView的滑动状态
+        int state = recyclerView.getScrollState();
+        if (visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1 && state == recyclerView.SCROLL_STATE_IDLE) {
+            return true;
+        } else {
             return false;
         }
-        //computeVerticalScrollExtent()是当前屏幕显示的区域高度
-        //computeVerticalScrollOffset() 是当前屏幕之前滑过的距离
-        //computeVerticalScrollRange()是整个View控件的高度
-        if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange()) {
-            return true;
-        }
-        return false;
     }
 
 
@@ -422,7 +386,7 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
     /**
      * 获取RecyclerView适配器
      */
-    public MyAdapter getAdapter() {
+    public BaseRecyclerAdapter<T> getAdapter() {
         return mAdapter;
     }
 
@@ -432,16 +396,16 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
     protected abstract int setLayoutId();
 
     /**
+     * 设置Item的layout资源文件ID
+     */
+    protected abstract int setItemLayoutId(int viewType);
+
+    /**
      * 设置除开头尾外的Item类型
      */
     protected int setItemViewType(int position) {
         return BaseRecyclerAdapter.TYPE_NORMAL;
     }
-
-    /**
-     * 设置布局文件
-     */
-    protected abstract int setItemLayoutId(int viewType);
 
     /**
      * 设置RecyclerView布局管理器(不设置默认LinearLayoutManager)
@@ -455,6 +419,8 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
         };
     }
 
+    ;
+
     /**
      * 设置RecyclerView条目装饰
      */
@@ -467,16 +433,24 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
     /**
      * 绑定布局文件关联
      */
-    protected void bindView() {};
+    protected void bindView() {
+    }
+
+    ;
 
     /**
      * 绑定头布局文件关联
-     * */
-    protected int setHeadLayoutId(){return 0;}
+     */
+    protected int setHeadLayoutId() {
+        return 0;
+    }
+
     /**
      * 绑定脚布局文件关联
-     * */
-    protected int setFooterLayoutId(){return 0;}
+     */
+    protected int setFooterLayoutId() {
+        return 0;
+    }
 
     /**
      * 设置查询本地数据库SQL条件()
@@ -492,6 +466,15 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
      */
     protected From setDeleteSqlParams(From from) {
         return from;
+    }
+
+    ;
+
+    /**
+     * 设置请求位置
+     */
+    protected String setHttpUrl() {
+        return BaseHttp.getInstance().getConfig().getBaseUrl();
     }
 
     /**
@@ -521,20 +504,11 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
      * 处理HTTP请求失败回参数据
      */
     protected void handleHttpDataFailure() {
-        switch (loadPattern) {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                showLodingFail();
-                break;
-            case 3:
-                break;
+        if((getAdapter()==null || getAdapter().getDatas() == null || getAdapter().getDatas().size() == 0) && pageInfo[0] == pageInfo[1]){
+            //本地无数据,并且加载第一页
+            showLodingFail();
         }
     }
-
-    ;
 
     /**
      * 处理HTTP请求状态
@@ -545,22 +519,12 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
         this.httpState = httpState;
     }
 
-    ;
-
     /**
-     * 加载模式 <br />
-     * 0:1.先加载本地数据;
-     *   2.再加载网络数据 <br />
-     * 1:1.只加载本地数据 <br />
-     * 2:1.只加载网络数据 <br />
-     * 3:1.先下载网络数据到本地;
-     *   2.再加载本地数据 <br />
+     * 设置加载模式 <br />
      */
     protected void setLoadPattern(int loadPattern) {
         this.loadPattern = loadPattern;
     }
-
-    ;
 
     /**
      * 设置框架加载网络数据后是否更新本地数据库 <br />
@@ -570,14 +534,21 @@ public abstract class AbsRecyclerViewUI<T extends Model> extends BaseUI implemen
     protected void setUpdLocalData(boolean updLocalData) {
         this.updLocalData = updLocalData;
     }
+
     /**
      * 绑定ItemView交互
      */
     protected abstract void bindItemData(RecyclerViewHolder holder, int position, T model);
+
     /**
      * 绑定ItemView交互 | 局部刷新 | 解决刷新闪烁问题
-     * */
-    protected void bindItemDataLocal(RecyclerViewHolder holder, int position, T model){}
+     */
+    protected void bindItemDataLocal(RecyclerViewHolder holder, int position, T model) {
+    }
+
+    protected BaseRecyclerAdapter setAdapter() {
+        return new MyAdapter(this, new ArrayList<T>());
+    }
 
     //重写此方法可实现动态设置每个item项在行、列中所占的份数
     protected void setSpanSize(RecyclerView recyclerView) {

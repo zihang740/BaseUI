@@ -38,7 +38,7 @@ public class BaseHttpConfig {
         this(new Builder());
     }
     
-    public BaseHttpConfig(BaseHttpConfig.Builder builder){
+    public BaseHttpConfig(Builder builder){
         this.baseUrl=builder.baseUrl;
         this.baseWsUrl=builder.baseWsUrl;
         this.queryPath=builder.queryPath;
@@ -80,28 +80,28 @@ public class BaseHttpConfig {
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
         }
         
-        public BaseHttpConfig.Builder baseUrl(String baseUrl){
+        public Builder baseUrl(String baseUrl){
             this.baseUrl=baseUrl;
             this.retrofitBuilder.baseUrl(baseUrl);
             return this;
         }
 
-        public BaseHttpConfig.Builder baseWsUrl(String baseWsUrl){
+        public Builder baseWsUrl(String baseWsUrl){
             this.baseWsUrl=baseWsUrl;
             return this;
         }
 
-        public BaseHttpConfig.Builder queryPath(String queryPath){
+        public Builder queryPath(String queryPath){
             this.queryPath=queryPath;
             return this;
         }
 
-        public BaseHttpConfig.Builder writePath(String writePath){
+        public Builder writePath(String writePath){
             this.writePath=writePath;
             return this;
         }
 
-        public BaseHttpConfig.Builder timeOut(int timeOut){
+        public Builder timeOut(int timeOut){
             this.timeOut=timeOut;
             this.clientBuilder.connectTimeout(this.timeOut, TimeUnit.SECONDS);
             this.clientBuilder.readTimeout(this.timeOut, TimeUnit.SECONDS);
@@ -109,7 +109,7 @@ public class BaseHttpConfig {
             return this;
         }
 
-        public BaseHttpConfig.Builder addInterceptor(IHttpInterceptor interceptor){
+        public Builder addInterceptor(IHttpInterceptor interceptor){
             this.interceptors.add(interceptor);
             return this;
         }
