@@ -109,10 +109,7 @@ dependencies {
     api 'com.squareup.picasso:picasso:2.5.2' //知乎开源图片选择框架 相关依赖
     api 'com.github.yalantis:ucrop:2.2.3' //图片剪裁框架
     api 'com.github.wendux:DSBridge-Android:v3.0.0' // DSBridge 里面,已集成X5内核WebView
-
     api 'com.baidu.mobstat:mtj-sdk-circle:3.9.7.1'//百度移动统计
-    api 'com.github.lecho:hellocharts-android:v1.5.6'//图表工具
-
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
 }
 

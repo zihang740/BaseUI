@@ -1,7 +1,7 @@
 ext{
     // false: 组件模式
     // true ：集成模式
-    isModule = false
+    isModule = true
     androidInfo = [
             compileSdkVersion: 28,
             buildToolsVersion:"28.0.3",
