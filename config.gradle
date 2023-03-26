@@ -1,14 +1,14 @@
 ext{
     // false: 组件模式
     // true ：集成模式
-    isModule = true
+    isModule = false
     androidInfo = [
             compileSdkVersion: 28,
             buildToolsVersion:"28.0.3",
             targetSdkVersion : 28,
-            minSdkVersion    : 14,
-            versionCode      : 417,
-            versionName      : "4.1.7"
+            minSdkVersion    : 17,
+            versionCode      : 418,
+            versionName      : "4.1.8"
     ]
 
     appId = [
